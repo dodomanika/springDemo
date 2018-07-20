@@ -1,0 +1,34 @@
+Chcemy móc zrobić głosowanie na komentarze
+1. Dodaj nowe pola do Comment (bez getterów i setterów)
+-> int upVotes;
+-> int downVotes;
+
+2. Dodaj nową metodę w CommentController działająca na adresie POST /comment/{id}/vote, która przyjmuje w ciele zapytania:
+{
+"up": [boolean],
+"down: [boolean]
+}
+
+3. Dodaj walidację parametrów (zawsze musi być tylko jeden true, czyli zakazane kombinacje to:
+-> false; false
+-> true; true
+
+W takim przypadku rzuć wyjątek i przemapuj go na HTTP 400 (BAD_STATUS) dodając stosowny reason. Walidacja niech odbywa się w metodzie kontrolera CommentController.
+
+4. Wystaw w encji Comment dwie metody: incrementVotes() i decrementVotes(), które odpowiednio działają na polach z zadania 1.
+
+
+/////tuuuuuuuuuuuu
+5. Dodaj nową klasę CommentDTO, ma zawierać te same pola co Comment, ale zamiast int upVotes i int downVotes ma zawierać jedno pole int votes (votes  = upVotes + downVotes). Wszystkie pola mają być prywatne i finalne. Wystaw konstruktor oraz gettery.
+
+6. Zmień typ zwracanych komentarzy w GET /comment i GET /comment/{id} na CommentDTO.
+
+7. Zmodyfikuj encję Comment tak aby również zawierała pole int votes. Pamiętaj o edycji metod z zadania 4.
+
+8. Obejrzyj pierwsze 30 minut tego -> https://www.youtube.com/watch?v=fmLTFjhyn-k a następnie zmodyfikuj GET /comment aby zwracało komentarze w kolejności od NAJLEPIEJ ocenianych
+
+9. Obejrzyj film do końca
+
+10. Zrefraktoruj Comment oraz Article aby NOWE OBIEKTY tworzone były przez konstruktor parametrowy (nie wszystkie pola w Comment należy umiejscowić w konstruktorze, które nie?). Uruchom program. Nie działa? Dostaw pusty konstruktor (bez parametrowy). Działa? Hibernate tego potrzebował.
+
+Fajnie byłoby gdybyś zrobiła jakieś repository na github i każde zadanie oddzielnie commitowała 🙂
