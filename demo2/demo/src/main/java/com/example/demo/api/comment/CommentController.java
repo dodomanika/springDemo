@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class CommentController {
@@ -28,30 +29,20 @@ public class CommentController {
     @GetMapping("/comments")
     public List<CommentDTO> getComments() {
         List<Comment> comments = commentRepository.findAllOrOrderByVotesDesc();
-        List<CommentDTO> commentDTOS = new ArrayList<>();
-        for (Comment c:comments
-             ) {
-            commentDTOS.add(new CommentDTO(c.getId(), c.getUserName(), c.getBody(), c.getVotes()));
-        }
-        return commentDTOS;
+
+        return comments.stream()
+                .map(comment -> new CommentDTO(comment.getId(), comment.getUserName(), comment.getBody(), comment.getVotes()))
+                .collect(Collectors.toList());
+
     }
 
     @GetMapping("/comments/{id}")
     public CommentDTO getComment(@PathVariable long id) {
 
-//        Optional<Comment> commentOptional = commentRepository.findById(id);
-//        if (commentOptional.isPresent()) {
-//            Comment comment = commentOptional.get();
-//            return comment;
-//        } else {
-//            throw new CommentNotFoundException();
-//        }
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(CommentNotFoundException::new);
 
-        // EKWIWALENT tego co na dole
-        Comment comment = commentRepository.findById(id).orElseThrow(CommentNotFoundException::new);
         return new CommentDTO(comment.getId(), comment.getUserName(), comment.getBody(), comment.getVotes());
-
-        // SPOJRZ W TEN WYJATEK (w kod) /\
     }
 
 
@@ -63,7 +54,6 @@ public class CommentController {
                 .orElseThrow(ArticleNotFoundException::new);
 
         commentService.createComment(article, body.getUserName(), body.getBody());
-
     }
 
     @PostMapping("/comments/{id}/vote")
